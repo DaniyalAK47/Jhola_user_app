@@ -1,0 +1,77 @@
+{
+  "project_info": {
+    "project_number": "307159515087",
+    "firebase_url": "https://jhola-e90ff.firebaseio.com",
+    "project_id": "jhola-e90ff",
+    "storage_bucket": "jhola-e90ff.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:307159515087:android:2561c0ab59865b11441cba",
+        "android_client_info": {
+          "package_name": "com.example.jhola"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "307159515087-49edhgsgpvjnjkl805p3uub5ad9cda7t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.jhola",
+            "certificate_hash": "d3c54747cc35f40cd1be7197f1d10d0f47651fa9"
+          }
+        },
+        {
+          "client_id": "307159515087-vl5u9t676ig1rmov41rf37nniovmvg92.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCH3suiWjXA99Eh7JP5-m1imdETAJu_FMM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "307159515087-vl5u9t676ig1rmov41rf37nniovmvg92.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:307159515087:android:bc5cdad8c4cb503d441cba",
+        "android_client_info": {
+          "package_name": "com.example.jhola_riders"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "307159515087-vl5u9t676ig1rmov41rf37nniovmvg92.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCH3suiWjXA99Eh7JP5-m1imdETAJu_FMM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "307159515087-vl5u9t676ig1rmov41rf37nniovmvg92.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
