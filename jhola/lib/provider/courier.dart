@@ -86,6 +86,7 @@ class Courier with ChangeNotifier {
           "assignTo": "none",
           "status": "pending",
           "price": double.parse(price).toStringAsFixed(2),
+          "totalAmount": 0.0,
         }));
 
     print(json.decode(response.body));
@@ -134,23 +135,25 @@ class Courier with ChangeNotifier {
     }
 
     extractedCourier.forEach((courierId, courierData) {
-      loadedCourier.add(CourierItem(
-        userId: courierData["userId"],
-        courierId: courierId,
-        productSize: courierData["productSize"],
-        productWeight: courierData["productWeight"],
-        productDescription: courierData["productDescription"],
-        pickUpLat: courierData["pickUpLat"],
-        pickUpLng: courierData["pickUpLng"],
-        pickUpDetail: courierData["pickUpDetail"],
-        deliveryContact: courierData["deliveryContact"],
-        deliveryLat: courierData["deliveryLat"],
-        deliveryLng: courierData["deliveryLng"],
-        deliveryDetail: courierData["deliveryDetail"],
-        riderId: courierData["riderId"],
-        status: courierData["status"],
-        price: courierData["price"],
-      ));
+      if (courierData["status"] != "delivered") {
+        loadedCourier.add(CourierItem(
+          userId: courierData["userId"],
+          courierId: courierId,
+          productSize: courierData["productSize"],
+          productWeight: courierData["productWeight"],
+          productDescription: courierData["productDescription"],
+          pickUpLat: courierData["pickUpLat"],
+          pickUpLng: courierData["pickUpLng"],
+          pickUpDetail: courierData["pickUpDetail"],
+          deliveryContact: courierData["deliveryContact"],
+          deliveryLat: courierData["deliveryLat"],
+          deliveryLng: courierData["deliveryLng"],
+          deliveryDetail: courierData["deliveryDetail"],
+          riderId: courierData["riderId"],
+          status: courierData["status"],
+          price: courierData["price"],
+        ));
+      }
     });
 
     _couriers = loadedCourier;
@@ -198,6 +201,7 @@ class Courier with ChangeNotifier {
           "assignTo": "none",
           "status": "pending",
           "price": double.parse(price).toStringAsFixed(2),
+          "totalAmount": 0.0,
         }));
     final responseData = json.decode(response.body);
     if (responseData['error'] != null) {

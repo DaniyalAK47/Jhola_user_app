@@ -30,6 +30,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
     var userId = Provider.of<Auth>(context, listen: false).guserId;
     print(userId);
     _messaging.subscribeToTopic(userId);
+    _messaging.subscribeToTopic('offer');
     super.didChangeDependencies();
   }
 
@@ -77,7 +78,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           splashColor: Colors.deepOrange,
                           child: Container(
                             width: _width,
-                            height: height * 0.37,
+                            height: 315,
                             child: Card(
                               elevation: 4,
                               margin: EdgeInsets.all(10),
@@ -90,7 +91,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                     ),
                                     child: Image.asset(
                                       'assets/images/restaurant_category.jpg',
-                                      height: height * 0.17,
+                                      height: 150,
                                       width: _width,
                                       fit: BoxFit.cover,
                                     ),

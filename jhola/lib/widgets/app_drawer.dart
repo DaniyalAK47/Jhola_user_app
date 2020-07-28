@@ -95,6 +95,7 @@ class AppDrawer extends StatelessWidget {
             title: Text("Logout"),
             onTap: () {
               _messaging.unsubscribeFromTopic(userId);
+              _messaging.unsubscribeFromTopic('offer');
               Navigator.pushReplacementNamed(context, WelcomeScreen.routeName);
               Provider.of<Auth>(context, listen: false).logout();
             },
