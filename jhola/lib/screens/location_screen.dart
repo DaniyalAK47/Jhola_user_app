@@ -131,6 +131,11 @@ class _LocationScreenState extends State<LocationScreen> {
                               selectedLocation["long"].toString());
                       Navigator.of(context).pop();
                     }
+                    if (screenType == 'edit') {
+                      Provider.of<CurrentLocation>(context, listen: false)
+                          .updateLocation(selectedLocation);
+                      Navigator.of(context).pop();
+                    }
                   },
                   child: Text('Select'),
                 ),

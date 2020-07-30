@@ -119,31 +119,29 @@ class Order with ChangeNotifier {
     }
 
     extractedOrders.forEach((orderId, orderData) {
-      if (orderData["status"].toString() != "completed") {
-        loadedOrders.add(
-          OrderItem(
-              orderId: orderData["orderId"].toString(),
-              shopId: orderData["shopId"],
-              userName: orderData["userName"],
-              address: orderData["address"],
-              amount: orderData["totalAmount"],
-              products: (orderData["products"] as List<dynamic>)
-                  .map(
-                    (e) => CartItem(
-                      description: e['description'],
-                      cartId: e["cartId"],
-                      shopId: e["shopId"],
-                      productId: e["productId"],
-                      title: e["title"],
-                      quantity: e["quantity"],
-                      price: e["price"],
-                    ),
-                  )
-                  .toList(),
-              dateTime: DateTime.now(),
-              status: orderData["status"]),
-        );
-      }
+      loadedOrders.add(
+        OrderItem(
+            orderId: orderData["orderId"].toString(),
+            shopId: orderData["shopId"],
+            userName: orderData["userName"],
+            address: orderData["address"],
+            amount: orderData["totalAmount"],
+            products: (orderData["products"] as List<dynamic>)
+                .map(
+                  (e) => CartItem(
+                    description: e['description'],
+                    cartId: e["cartId"],
+                    shopId: e["shopId"],
+                    productId: e["productId"],
+                    title: e["title"],
+                    quantity: e["quantity"],
+                    price: e["price"],
+                  ),
+                )
+                .toList(),
+            dateTime: DateTime.now(),
+            status: orderData["status"]),
+      );
     });
     _orders = loadedOrders.reversed.toList();
     notifyListeners();

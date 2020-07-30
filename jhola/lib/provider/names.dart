@@ -35,6 +35,7 @@ class MenuItem {
   final double price;
   final String description;
   final String image;
+  final String stock;
 
   MenuItem({
     @required this.id,
@@ -42,6 +43,7 @@ class MenuItem {
     @required this.price,
     @required this.description,
     this.image,
+    this.stock,
   });
 }
 
@@ -51,6 +53,7 @@ class DealItem {
   final double price;
   final String description;
   final String image;
+  final String stock;
 
   DealItem({
     @required this.id,
@@ -58,6 +61,7 @@ class DealItem {
     @required this.price,
     @required this.description,
     this.image,
+    this.stock,
   });
 }
 
@@ -157,108 +161,116 @@ class Names with ChangeNotifier {
     final urlRestaurant =
         'https://jhola-e90ff.firebaseio.com/registeredShops/restaurants.json';
     var responseRestaurant = await http.get(urlRestaurant);
-    // print(responseRestaurant.body);
+    print(responseRestaurant.body);
     final List<NamesItem> loadedRestaurant = [];
     var extractedRestaurant =
         json.decode(responseRestaurant.body) as Map<String, dynamic>;
-    if (extractedRestaurant == null) {
-      return;
+    // print(extractedRestaurant);
+    if (extractedRestaurant != null) {
+      extractedRestaurant.forEach((resId, resData) {
+        // List<DealItem> loadedDeals = [];
+        loadedRestaurant.add(
+          NamesItem(
+            id: resId.toString(),
+            name: resData['name'].toString(),
+            description: resData['address'].toString(),
+            namesLat: resData['lat'].toString(),
+            namesLong: resData['long'].toString(),
+            status: resData["loggedIn"].toString(),
+            address: resData['address'].toString(),
+            contact: resData['phone'].toString(),
+            menu: resData["menu"] == null
+                ? []
+                : (resData["menu"] as Map<String, dynamic>)
+                    .values
+                    .map((e) => MenuItem(
+                          id: e["productId"].toString(),
+                          name: e["productName"].toString(),
+                          price: double.parse(e["productPrice"].toString()),
+                          description: e["productDescription"].toString(),
+                          stock: e["stock"].toString(),
+                          image:
+                              "https://firebasestorage.googleapis.com/v0/b/jhola-e90ff.appspot.com/o/images%2F${e['productId'].toString()}?alt=media&token=37e96ab0-172d-4387-88a5-18c508abe70b",
+                        ))
+                    .toList(),
+            deal: resData["deals"] == null
+                ? []
+                : (resData["deals"] as Map<String, dynamic>)
+                    .values
+                    .map((e) => DealItem(
+                          id: e["productId"].toString(),
+                          name: e["productName"].toString(),
+                          price: double.parse(e["productPrice"].toString()),
+                          description: e["productDescription"].toString(),
+                          stock: e["stock"].toString(),
+                          image:
+                              "https://firebasestorage.googleapis.com/v0/b/jhola-e90ff.appspot.com/o/images%2F${e['productId'].toString()}?alt=media&token=37e96ab0-172d-4387-88a5-18c508abe70b",
+                        ))
+                    .toList(),
+          ),
+        );
+      });
     }
-    extractedRestaurant.forEach((resId, resData) {
-      // List<DealItem> loadedDeals = [];
-      loadedRestaurant.add(
-        NamesItem(
-          id: resId.toString(),
-          name: resData['name'].toString(),
-          description: resData['address'].toString(),
-          namesLat: resData['lat'].toString(),
-          namesLong: resData['long'].toString(),
-          status: resData["isLoggedIn"].toString(),
-          address: resData['address'].toString(),
-          contact: resData['phone'].toString(),
-          menu: resData["menu"] == null
-              ? []
-              : (resData["menu"] as Map<String, dynamic>)
-                  .values
-                  .map((e) => MenuItem(
-                        id: e["productId"].toString(),
-                        name: e["productName"].toString(),
-                        price: double.parse(e["productPrice"].toString()),
-                        description: e["productDescription"].toString(),
-                        image:
-                            "https://firebasestorage.googleapis.com/v0/b/jhola-e90ff.appspot.com/o/images%2F${e['productId'].toString()}?alt=media&token=37e96ab0-172d-4387-88a5-18c508abe70b",
-                      ))
-                  .toList(),
-          deal: resData["deals"] == null
-              ? []
-              : (resData["deals"] as Map<String, dynamic>)
-                  .values
-                  .map((e) => DealItem(
-                        id: e["productId"].toString(),
-                        name: e["productName"].toString(),
-                        price: double.parse(e["productPrice"].toString()),
-                        description: e["productDescription"].toString(),
-                        image:
-                            "https://firebasestorage.googleapis.com/v0/b/jhola-e90ff.appspot.com/o/images%2F${e['productId'].toString()}?alt=media&token=37e96ab0-172d-4387-88a5-18c508abe70b",
-                      ))
-                  .toList(),
-        ),
-      );
-    });
 
     final urlShops =
         'https://jhola-e90ff.firebaseio.com/registeredShops/grocery.json';
     var responseShops = await http.get(urlShops);
-    // print(responseShops.body);
+    print(responseShops.body);
     final List<NamesItem> loadedShops = [];
     var extractedShops =
         json.decode(responseShops.body) as Map<String, dynamic>;
-    if (extractedShops == null) {
-      return;
-    }
-
-    extractedShops.forEach((shopId, shopData) {
-      // List<DealItem> loadedDeals = [];
-      loadedShops.add(
-        NamesItem(
-          id: shopId.toString(),
-          name: shopData['name'].toString(),
-          description: shopData['address'].toString(),
-          status: shopData["isLoggedIn"].toString(),
-          namesLat: shopData['lat'].toString(),
-          namesLong: shopData['long'].toString(),
-          address: shopData['address'].toString(),
-          contact: shopData['phone'].toString(),
-          menu: shopData["items"] == null
-              ? []
-              : (shopData["items"] as Map<String, dynamic>)
-                  .values
-                  .map((e) => MenuItem(
+    // print(extractedShops);
+    if (extractedShops != null) {
+      extractedShops.forEach((shopId, shopData) {
+        // List<DealItem> loadedDeals = [];
+        loadedShops.add(
+          NamesItem(
+            id: shopId.toString(),
+            name: shopData['name'].toString(),
+            description: shopData['address'].toString(),
+            status: shopData["loggedIn"].toString(),
+            namesLat: shopData['lat'].toString(),
+            namesLong: shopData['long'].toString(),
+            address: shopData['address'].toString(),
+            contact: shopData['phone'].toString(),
+            menu: shopData["items"] == null
+                ? []
+                : (shopData["items"] as Map<String, dynamic>)
+                    .values
+                    .map((e) => MenuItem(
+                          id: e["productId"].toString(),
+                          name: e["productName"].toString(),
+                          price: double.parse(e["productPrice"].toString()),
+                          description: e["productDescription"].toString(),
+                          stock: e["stock"].toString(),
+                          image:
+                              "https://firebasestorage.googleapis.com/v0/b/jhola-e90ff.appspot.com/o/images%2F${e['productId'].toString()}?alt=media&token=37e96ab0-172d-4387-88a5-18c508abe70b",
+                        ))
+                    .toList(),
+            deal: shopData["deals"] == null
+                ? []
+                : (shopData["deals"] as Map<String, dynamic>)
+                    .values
+                    .map((e) => DealItem(
                         id: e["productId"].toString(),
                         name: e["productName"].toString(),
                         price: double.parse(e["productPrice"].toString()),
                         description: e["productDescription"].toString(),
+                        stock: e['stock'].toString(),
                         image:
-                            "https://firebasestorage.googleapis.com/v0/b/jhola-e90ff.appspot.com/o/images%2F${e['productId'].toString()}?alt=media&token=37e96ab0-172d-4387-88a5-18c508abe70b",
-                      ))
-                  .toList(),
-          deal: shopData["deals"] == null
-              ? []
-              : (shopData["deals"] as Map<String, dynamic>)
-                  .values
-                  .map((e) => DealItem(
-                      id: e["productId"].toString(),
-                      name: e["productName"].toString(),
-                      price: double.parse(e["productPrice"].toString()),
-                      description: e["productDescription"].toString(),
-                      image:
-                          "https://firebasestorage.googleapis.com/v0/b/jhola-e90ff.appspot.com/o/images%2F${e['productId'].toString()}?alt=media&token=37e96ab0-172d-4387-88a5-18c508abe70b"))
-                  .toList(),
-        ),
-      );
-    });
+                            "https://firebasestorage.googleapis.com/v0/b/jhola-e90ff.appspot.com/o/images%2F${e['productId'].toString()}?alt=media&token=37e96ab0-172d-4387-88a5-18c508abe70b"))
+                    .toList(),
+          ),
+        );
+      });
+    }
+    print("helooooooooo");
 
     _restaurantNames = loadedRestaurant.toList();
+
+    _restaurantNames.forEach((element) {
+      print(element.name);
+    });
     _shopNames = loadedShops.toList();
   }
 }

@@ -45,7 +45,8 @@ class Rider with ChangeNotifier {
 
     extractedRider.forEach((riderId, riderData) {
       if (riderData["approved"].toString() == "true" &&
-          riderData["available"].toString() == "true") {
+          riderData["available"].toString() == "true" &&
+          riderData["loggedIn"].toString() == "true") {
         // print(riderData["name"]);
         // print(riderData["phoneNo"]);
         // print(riderData["lat"]);

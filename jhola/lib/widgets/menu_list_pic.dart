@@ -10,6 +10,7 @@ class MealListPic extends StatefulWidget {
   final double price;
   final String description;
   final String img;
+  final String stock;
 
   MealListPic({
     @required this.shopId,
@@ -18,6 +19,7 @@ class MealListPic extends StatefulWidget {
     @required this.price,
     @required this.description,
     @required this.img,
+    @required this.stock,
   });
 
   @override
@@ -81,14 +83,27 @@ class _MealListPicState extends State<MealListPic> {
                     vertical: 5,
                     horizontal: 20,
                   ),
-                  child: Text(
-                    widget.name,
-                    style: TextStyle(
-                      fontSize: 26,
-                      color: Colors.white,
-                    ),
-                    softWrap: true,
-                    overflow: TextOverflow.fade,
+                  child: Column(
+                    children: [
+                      Text(
+                        "${widget.name}",
+                        style: TextStyle(
+                          fontSize: 26,
+                          color: Colors.white,
+                        ),
+                        softWrap: true,
+                        overflow: TextOverflow.fade,
+                      ),
+                      Text(
+                        widget.stock == "true" ? "avaliable" : "out of stock",
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: widget.stock == "true"
+                              ? Colors.green
+                              : Colors.red,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               )
@@ -112,33 +127,35 @@ class _MealListPicState extends State<MealListPic> {
                     ),
                     IconButton(
                       icon: Icon(Icons.shopping_cart),
-                      onPressed: () {
-                        cart.addItem(
-                          widget.productId,
-                          widget.shopId,
-                          // shopName,
-                          widget.price,
-                          widget.name,
-                          widget.description,
-                        );
-                        Scaffold.of(context).hideCurrentSnackBar();
-                        Scaffold.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              'Item added to the cart!',
-                            ),
-                            duration: Duration(
-                              seconds: 2,
-                            ),
-                            action: SnackBarAction(
-                              label: 'UNDO',
-                              onPressed: () {
-                                cart.removeSingleItem(widget.productId);
-                              },
-                            ),
-                          ),
-                        );
-                      },
+                      onPressed: widget.stock == "false"
+                          ? () {}
+                          : () {
+                              cart.addItem(
+                                widget.productId,
+                                widget.shopId,
+                                // shopName,
+                                widget.price,
+                                widget.name,
+                                widget.description,
+                              );
+                              Scaffold.of(context).hideCurrentSnackBar();
+                              Scaffold.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    'Item added to the cart!',
+                                  ),
+                                  duration: Duration(
+                                    seconds: 2,
+                                  ),
+                                  action: SnackBarAction(
+                                    label: 'UNDO',
+                                    onPressed: () {
+                                      cart.removeSingleItem(widget.productId);
+                                    },
+                                  ),
+                                ),
+                              );
+                            },
                     )
                   ],
                 ),

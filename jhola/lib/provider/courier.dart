@@ -135,25 +135,23 @@ class Courier with ChangeNotifier {
     }
 
     extractedCourier.forEach((courierId, courierData) {
-      if (courierData["status"] != "delivered") {
-        loadedCourier.add(CourierItem(
-          userId: courierData["userId"],
-          courierId: courierId,
-          productSize: courierData["productSize"],
-          productWeight: courierData["productWeight"],
-          productDescription: courierData["productDescription"],
-          pickUpLat: courierData["pickUpLat"],
-          pickUpLng: courierData["pickUpLng"],
-          pickUpDetail: courierData["pickUpDetail"],
-          deliveryContact: courierData["deliveryContact"],
-          deliveryLat: courierData["deliveryLat"],
-          deliveryLng: courierData["deliveryLng"],
-          deliveryDetail: courierData["deliveryDetail"],
-          riderId: courierData["riderId"],
-          status: courierData["status"],
-          price: courierData["price"],
-        ));
-      }
+      loadedCourier.add(CourierItem(
+        userId: courierData["userId"],
+        courierId: courierId,
+        productSize: courierData["productSize"],
+        productWeight: courierData["productWeight"],
+        productDescription: courierData["productDescription"],
+        pickUpLat: courierData["pickUpLat"],
+        pickUpLng: courierData["pickUpLng"],
+        pickUpDetail: courierData["pickUpDetail"],
+        deliveryContact: courierData["deliveryContact"],
+        deliveryLat: courierData["deliveryLat"],
+        deliveryLng: courierData["deliveryLng"],
+        deliveryDetail: courierData["deliveryDetail"],
+        riderId: courierData["riderId"],
+        status: courierData["status"],
+        price: courierData["price"],
+      ));
     });
 
     _couriers = loadedCourier;

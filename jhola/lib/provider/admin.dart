@@ -5,6 +5,9 @@ import 'dart:convert';
 class Admin with ChangeNotifier {
   String tax;
   String deliveryCharge;
+  String chargesSmall;
+  String chargesMedium;
+  String chargesLarge;
 
   Future<void> fetchAdmin() async {
     final url = 'https://jhola-e90ff.firebaseio.com/Admin.json';
@@ -15,7 +18,12 @@ class Admin with ChangeNotifier {
     responseData.forEach((key, value) {
       tax = value["tax"].toString();
       deliveryCharge = value["delivery"].toString();
+      chargesSmall = value["small"].toString();
+      chargesMedium = value["medium"].toString();
+      chargesLarge = value["large"].toString();
     });
+
+    // print(chargesSmall);
 
     notifyListeners();
   }

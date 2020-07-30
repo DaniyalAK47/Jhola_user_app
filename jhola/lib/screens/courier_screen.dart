@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart';
+import 'package:jhola/provider/admin.dart';
 import 'package:jhola/provider/auth.dart';
 import 'package:jhola/provider/courier.dart';
 import 'package:jhola/provider/courier_location.dart';
@@ -27,6 +28,10 @@ class _CourierScreenState extends State<CourierScreen> {
   bool _loading = false;
   bool _initRiderLoading = true;
   bool _change = false;
+  bool _submitting = false;
+  String chargesSmall;
+  String chargesMedium;
+  String chargesLarge;
 
   @override
   void didChangeDependencies() async {
@@ -53,6 +58,22 @@ class _CourierScreenState extends State<CourierScreen> {
         );
         _change = true;
       }
+
+      setState(() {
+        _loading = true;
+      });
+      await Provider.of<Admin>(context, listen: false).fetchAdmin();
+      chargesSmall = Provider.of<Admin>(context, listen: false).chargesSmall;
+      chargesMedium = Provider.of<Admin>(context, listen: false).chargesMedium;
+      chargesLarge = Provider.of<Admin>(context, listen: false).chargesLarge;
+      print(chargesSmall);
+      print(chargesMedium);
+      print(chargesLarge);
+
+      setState(() {
+        _loading = false;
+      });
+
       _initRiderLoading = false;
     }
 
@@ -185,11 +206,23 @@ class _CourierScreenState extends State<CourierScreen> {
         double.parse(_pickUpLng),
         double.parse(_deliveryLat),
         double.parse(_deliveryLng));
+    String rate;
 
-    _price = 35 + (km * 4);
-    if (_price < 50) {
-      _price = 50;
+    print(_productSize);
+
+    if (_productSize == "Small") {
+      rate = chargesSmall;
+    } else if (_productSize == "Medium") {
+      rate = chargesMedium;
+    } else if (_productSize == "Large") {
+      rate = chargesLarge;
     }
+    print(rate);
+
+    _price = (km * double.parse(rate));
+    // if (_price < 50) {
+    //   _price = 50;
+    // }
 
     try {
       courierId = await Provider.of<Courier>(context, listen: false).addCourier(
@@ -225,6 +258,14 @@ class _CourierScreenState extends State<CourierScreen> {
     return InkWell(
       onTap: _change
           ? () {
+              // Scaffold.of(context).showSnackBar(SnackBar(
+              //   content:
+              //       Text("Kindly wait as your order is being processed."),
+              //   duration: Duration(
+              //     seconds: 2,
+              //   ),
+              // ));
+
               // print("rider chosen $_riderChosen");
               final isValid = _form.currentState.validate();
               if (!isValid) {
@@ -253,10 +294,20 @@ class _CourierScreenState extends State<CourierScreen> {
                   double.parse(_deliveryLat),
                   double.parse(_deliveryLng));
 
-              double _price = 35 + (km * 4);
-              if (_price < 50) {
-                _price = 50;
+              // double _price = 35 + (km * 4);
+              // if (_price < 50) {
+              //   _price = 50;
+              // }
+              String rate;
+              if (_productSize == "Small") {
+                rate = Provider.of<Admin>(context, listen: false).chargesSmall;
+              } else if (_productSize == "Medium") {
+                rate = Provider.of<Admin>(context, listen: false).chargesMedium;
+              } else if (_productSize == "Large") {
+                rate = Provider.of<Admin>(context, listen: false).chargesLarge;
               }
+
+              _price = (km * double.parse(rate));
 
               try {
                 Provider.of<Courier>(context, listen: false).updateRider(
@@ -284,7 +335,7 @@ class _CourierScreenState extends State<CourierScreen> {
                 _showErrorDialog(errorMessage);
                 return false;
               }
-              sendFcmMessage(_riderChosen, _courierId);
+              // sendFcmMessage(_riderChosen, _courierId);
 
               showDialog(
                 context: context,
@@ -353,11 +404,20 @@ class _CourierScreenState extends State<CourierScreen> {
               );
             }
           : () async {
+              // Scaffold.of(context).showSnackBar(SnackBar(
+              //   content:
+              //       Text("Kindly wait as your order is being processed."),
+              //   duration: Duration(
+              //     seconds: 2,
+              //   ),
+              // ));
+
               var result = await _saveForm();
               if (result["bool"] == "false") {
                 return;
               }
-              sendFcmMessage(_riderChosen, result["courierId"]);
+
+              // sendFcmMessage(_riderChosen, result["courierId"]);
               showDialog(
                 context: context,
                 builder: (ctx) => AlertDialog(

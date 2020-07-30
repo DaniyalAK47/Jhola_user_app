@@ -43,6 +43,7 @@ class DetailsScreen extends StatelessWidget {
                   price: item.price,
                   description: item.description,
                   img: item.image,
+                  stock: item.stock,
                 ))
             .toList(),
       ),

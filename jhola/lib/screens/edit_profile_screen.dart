@@ -157,6 +157,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             .pushNamed(LocationScreen.routeName, arguments: {
           'lat': position.latitude.toString(),
           'long': position.longitude.toString(),
+          'screen': "edit",
         });
       },
       child: Container(
