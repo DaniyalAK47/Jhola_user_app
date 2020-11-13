@@ -1,9 +1,13 @@
 import 'dart:convert';
+import 'dart:io';
+// import 'dart:html';
 import 'dart:math';
 
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:jhola/provider/admin.dart';
 import 'package:jhola/provider/auth.dart';
 import 'package:jhola/provider/courier.dart';
@@ -13,6 +17,7 @@ import 'package:jhola/screens/location_screen.dart';
 import 'package:jhola/screens/rider_selection_screen.dart';
 import 'package:jhola/widgets/bezierContainer.dart';
 import 'package:provider/provider.dart';
+// import 'package:path/path.dart';
 
 class CourierScreen extends StatefulWidget {
   const CourierScreen({Key key}) : super(key: key);
@@ -119,7 +124,14 @@ class _CourierScreenState extends State<CourierScreen> {
     );
   }
 
-  Future<bool> sendFcmMessage(String riderId, String courierId) async {
+  Future<bool> sendFcmMessage(
+    String riderId,
+    String courierId,
+    String pickupLat,
+    String pickupLong,
+    String deliverLat,
+    String deliverLong,
+  ) async {
     try {
       var url = 'https://fcm.googleapis.com/fcm/send';
       var header = {
@@ -136,7 +148,12 @@ class _CourierScreenState extends State<CourierScreen> {
           // "click_button": "OPEN_ACTIVITY_1",
           "click_action": "OPEN_ACTIVITY_1",
         },
-        "data": {"OrderId": courierId, "courier": true},
+        "data": {
+          "OrderId": courierId,
+          "courier": true,
+          "pickupLat": pickupLat,
+          "pickupLong": pickupLong,
+        },
         "priority": "high",
         "to": "/topics/$riderId"
       };
@@ -335,7 +352,8 @@ class _CourierScreenState extends State<CourierScreen> {
                 _showErrorDialog(errorMessage);
                 return false;
               }
-              // sendFcmMessage(_riderChosen, _courierId);
+              sendFcmMessage(_riderChosen, _courierId, _pickUpLat, _pickUpLng,
+                  _deliveryLat, _deliveryLng);
 
               showDialog(
                 context: context,
@@ -417,7 +435,14 @@ class _CourierScreenState extends State<CourierScreen> {
                 return;
               }
 
-              // sendFcmMessage(_riderChosen, result["courierId"]);
+              sendFcmMessage(
+                _riderChosen,
+                result["courierId"],
+                _pickUpLat,
+                _pickUpLng,
+                _deliveryLat,
+                _deliveryLng,
+              );
               showDialog(
                 context: context,
                 builder: (ctx) => AlertDialog(
@@ -801,6 +826,42 @@ class _CourierScreenState extends State<CourierScreen> {
     );
   }
 
+  File _image;
+  String _uploadedFileURL;
+  bool _imageUploaded = false;
+
+  handleChooseImageFromGallery() async {
+    await ImagePicker.pickImage(source: ImageSource.gallery).then((image) {
+      setState(() {
+        _image = File(image.path);
+        _imageUploaded = true;
+      });
+      print("got the image");
+    });
+  }
+
+  Future uploadFile() async {
+    // StorageReference storageReference =
+    //     FirebaseStorage.instance.ref().child('courier_images/');
+    // StorageUploadTask uploadTask = storageReference.putFile(_image);
+    // await uploadTask.onComplete;
+    // print('File Uploaded');
+
+    String fileName = "bdjhbdj";
+    StorageReference firebaseStorageRef =
+        FirebaseStorage.instance.ref().child("courier_images/$fileName");
+    StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
+    StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
+    taskSnapshot.ref.getDownloadURL().then((value) => print(value));
+
+    // storageReference.getDownloadURL().then((fileURL) {
+    //   setState(() {
+    //     _uploadedFileURL = fileURL;
+    //   });
+    //   print(fileURL);
+    // });
+  }
+
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -827,9 +888,53 @@ class _CourierScreenState extends State<CourierScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             SizedBox(height: height * .2),
+                            GestureDetector(
+                              onTap: () {
+                                handleChooseImageFromGallery();
+                                print("second function");
+                                uploadFile();
+                              },
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Container(
+                                  // alignment: Alignment.centerLeft,
+                                  padding: EdgeInsets.all(20),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      width: 2,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                  child: _imageUploaded
+                                      ? Image.file(
+                                          _image,
+                                          width: 150,
+                                          height: 150,
+                                        )
+                                      : Icon(
+                                          Icons.photo_camera,
+                                          size: 40,
+                                          color: Colors.black,
+                                        ),
+                                ),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Padding(
+                                padding: EdgeInsets.all(5),
+                                child: Text(
+                                  "Add product image",
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ),
+                            ),
                             // _title(),
                             SizedBox(
-                              height: 50,
+                              height: 30,
                             ),
                             _emailPasswordWidget(),
                             SizedBox(

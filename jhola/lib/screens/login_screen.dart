@@ -9,6 +9,7 @@ import './../provider/auth.dart';
 import './../provider/http_exception.dart';
 
 import './../widgets/bezierContainer.dart';
+import 'latest_news_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({Key key, this.title}) : super(key: key);
@@ -100,20 +101,22 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _entryField(String title1, String title2, {bool isPassword = false}) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
+      // margin: EdgeInsets.symmetric(vertical: 10),
       child: Form(
         key: _form,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text(
-              title1,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            TextFormField(
+            // Text(
+            //   title1,
+            //   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            // ),
+            // SizedBox(
+            //   height: 10,
+            // ),
+            Padding(
+              padding: EdgeInsets.only(right: 20, left: 10),
+              child: TextFormField(
                 keyboardType: TextInputType.emailAddress,
                 validator: (value) {
                   if (value.isEmpty) {
@@ -124,17 +127,35 @@ class _LoginScreenState extends State<LoginScreen> {
                 onSaved: (value) => _email = value,
                 obscureText: false,
                 decoration: InputDecoration(
-                    border: InputBorder.none,
-                    fillColor: Color(0xfff3f3f4),
-                    filled: true)),
-            Text(
-              title2,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                  contentPadding: EdgeInsets.all(30),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(80),
+                      bottomRight: Radius.circular(0),
+                    ),
+                  ),
+                  fillColor: Color(0xfff3f3f4),
+                  filled: true,
+                  hintText: "Username",
+                  hintStyle: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey,
+                  ),
+                  icon: Icon(Icons.person_outline),
+                ),
+              ),
             ),
-            SizedBox(
-              height: 10,
-            ),
-            TextFormField(
+            // Text(
+            //   title2,
+            //   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            // ),
+            // SizedBox(
+            //   height: 10,
+            // ),
+            Padding(
+              padding: EdgeInsets.only(right: 20, left: 10),
+              child: TextFormField(
                 validator: (value) {
                   if (value.isEmpty) {
                     return "Please provide your password";
@@ -144,9 +165,26 @@ class _LoginScreenState extends State<LoginScreen> {
                 onSaved: (value) => _password = value,
                 obscureText: true,
                 decoration: InputDecoration(
-                    border: InputBorder.none,
-                    fillColor: Color(0xfff3f3f4),
-                    filled: true)),
+                  contentPadding: EdgeInsets.all(30),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(0),
+                      bottomRight: Radius.circular(80),
+                    ),
+                  ),
+                  // border: InputBorder.none,
+                  fillColor: Color(0xfff3f3f4),
+                  filled: true,
+                  hintText: "Password",
+                  hintStyle: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey,
+                  ),
+                  icon: Icon(Icons.lock_outline),
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -166,28 +204,31 @@ class _LoginScreenState extends State<LoginScreen> {
         // Navigator.of(context).pop();
         // Navigator.of(context).pop();
 
-        Navigator.of(context).pushReplacementNamed(CategoryScreen.routeName);
+        // Navigator.of(context).pushReplacementNamed(CategoryScreen.routeName);
+        Navigator.of(context).pushReplacementNamed(LatestNewsScreen.routeName,
+            arguments: {"autoLogin": "true"});
       },
       child: Container(
-        width: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.symmetric(vertical: 15),
-        alignment: Alignment.center,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(5)),
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                  color: Colors.grey.shade200,
-                  offset: Offset(2, 4),
-                  blurRadius: 5,
-                  spreadRadius: 2)
-            ],
+            borderRadius: BorderRadius.all(Radius.circular(100)),
+            // boxShadow: <BoxShadow>[
+            //   BoxShadow(
+            //       color: Colors.grey.shade200,
+            //       offset: Offset(2, 4),
+            //       blurRadius: 5,
+            //       spreadRadius: 2)
+            // ],
             gradient: LinearGradient(
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
                 colors: [Color(0xfffbb448), Color(0xfff7892b)])),
-        child: Text(
-          'Login',
-          style: TextStyle(fontSize: 20, color: Colors.white),
+        child: Padding(
+          padding: EdgeInsets.all(10),
+          child: Icon(
+            Icons.arrow_forward,
+            size: 40,
+            color: Colors.white,
+          ),
         ),
       ),
     );
@@ -262,50 +303,137 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     return Scaffold(
-        body: Container(
-      height: height,
-      child: Stack(
-        children: <Widget>[
-          Positioned(
-              top: -height * .15,
-              right: -MediaQuery.of(context).size.width * .4,
-              child: BezierContainer()),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  SizedBox(height: height * .2),
-                  _title(),
-                  SizedBox(height: 50),
+        body: SingleChildScrollView(
+      child: Column(
+        children: [
+          Image.asset(
+            'assets/images/login_top.png',
+            width: double.infinity,
+            height: 250,
+            fit: BoxFit.fill,
+          ),
+          Padding(
+            padding: EdgeInsets.only(
+              right: 10,
+              top: 40,
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                // border: Border.all(
+                //   width: 3,
+                //   color: Colors.grey[400],
+                // ),
+                borderRadius: BorderRadius.only(
+                  bottomRight: Radius.circular(90),
+                  topRight: Radius.circular(90),
+                ),
+              ),
+              child: Stack(
+                children: [
                   _emailPasswordWidget(),
-                  SizedBox(height: 20),
-                  _submitButton(),
-                  InkWell(
-                    onTap: () {
-                      Navigator.of(context).pushNamed(ForgetPassword.routeName);
-                    },
-                    child: Container(
-                      padding: EdgeInsets.symmetric(vertical: 10),
-                      alignment: Alignment.centerRight,
-                      child: Text('Forgot Password ?',
-                          style: TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.w500)),
-                    ),
-                  ),
-                  // _divider(),
-                  // _facebookButton(),
-                  SizedBox(height: height * .055),
-                  _createAccountLabel(),
+                  Positioned(right: 5, top: 50, child: _submitButton()),
                 ],
               ),
             ),
           ),
-          Positioned(top: 40, left: 0, child: _backButton()),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Padding(
+                padding: EdgeInsets.fromLTRB(10, 30, 20, 10),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pushNamed(ForgetPassword.routeName);
+                  },
+                  child: Text(
+                    "Forgot?",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey[400],
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
+              child: GestureDetector(
+                onTap: () {
+                  // Navigator.push(context,
+                  //     MaterialPageRoute(builder: (context) => SignUpScreen()));
+                  // Navigator.popAndPushNamed(context, SignUpScreen.routeName);
+                  Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (context) => SignUpScreen()));
+                },
+                child: Text(
+                  "Register",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.orangeAccent[700],
+                    fontSize: 30,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Image.asset(
+            'assets/images/login_bottom.png',
+            width: double.infinity,
+            height: 250,
+            fit: BoxFit.fill,
+          )
         ],
       ),
-    ));
+    )
+        //     Container(
+        //   height: height,
+        //   child: Stack(
+        //     children: <Widget>[
+        //       Positioned(
+        //           top: -height * .15,
+        //           right: -MediaQuery.of(context).size.width * .4,
+        //           child: BezierContainer()),
+        //       Container(
+        //         padding: EdgeInsets.symmetric(horizontal: 20),
+        //         child: SingleChildScrollView(
+        //           child: Column(
+        //             crossAxisAlignment: CrossAxisAlignment.center,
+        //             mainAxisAlignment: MainAxisAlignment.center,
+        //             children: <Widget>[
+        //               SizedBox(height: height * .2),
+        //               _title(),
+        //               SizedBox(height: 50),
+        //               _emailPasswordWidget(),
+        //               SizedBox(height: 20),
+        //               _submitButton(),
+        //               InkWell(
+        //                 onTap: () {
+        //                   Navigator.of(context).pushNamed(ForgetPassword.routeName);
+        //                 },
+        //                 child: Container(
+        //                   padding: EdgeInsets.symmetric(vertical: 10),
+        //                   alignment: Alignment.centerRight,
+        //                   child: Text('Forgot Password ?',
+        //                       style: TextStyle(
+        //                           fontSize: 14, fontWeight: FontWeight.w500)),
+        //                 ),
+        //               ),
+        //               // _divider(),
+        //               // _facebookButton(),
+        //               SizedBox(height: height * .055),
+        //               _createAccountLabel(),
+        //             ],
+        //           ),
+        //         ),
+        //       ),
+        //       Positioned(top: 40, left: 0, child: _backButton()),
+        //     ],
+        //   ),
+        // )
+        );
   }
 }

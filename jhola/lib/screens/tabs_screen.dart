@@ -16,6 +16,7 @@ class TabsScreen extends StatefulWidget {
 
 class _TabsScreenState extends State<TabsScreen> {
   String shopId;
+  String shopTitle;
   var _loadingData = false;
 
   @override
@@ -24,6 +25,7 @@ class _TabsScreenState extends State<TabsScreen> {
       final routeArgs =
           ModalRoute.of(context).settings.arguments as Map<String, String>;
       shopId = routeArgs['shopId'];
+      shopTitle = routeArgs['shopTitle'];
       // print(shopId);
       _loadingData = true;
     }
@@ -56,7 +58,7 @@ class _TabsScreenState extends State<TabsScreen> {
                 ),
               ),
             ],
-            title: Text('KFC'),
+            title: Text(shopTitle),
             bottom: TabBar(tabs: [
               Tab(
                 icon: Icon(Icons.menu),

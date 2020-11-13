@@ -8,15 +8,20 @@ import 'package:jhola/provider/courier.dart';
 import 'package:jhola/provider/courier_location.dart';
 import 'package:jhola/provider/names.dart';
 import 'package:jhola/provider/rider.dart';
+import 'package:jhola/screens/about_us_screen.dart';
+import 'package:jhola/screens/category_checkout_screen.dart';
 import 'package:jhola/screens/courier_list_screen.dart';
 import 'package:jhola/screens/courier_screen.dart';
 import 'package:jhola/screens/forget_password_screen.dart';
+import 'package:jhola/screens/latest_news_screen.dart';
 import 'package:jhola/screens/login_screen.dart';
 import 'package:jhola/screens/rider_selection_screen.dart';
+import 'package:jhola/screens/search_screen.dart';
 import 'package:jhola/screens/signup_screen.dart';
 import 'package:jhola/screens/tabs_screen.dart';
 import 'package:jhola/screens/tracking_courier_screem.dart';
 import 'package:jhola/screens/welcome_screen.dart';
+import 'package:jhola/widgets/category_selected.dart';
 import 'package:jhola/widgets/courier_list.dart';
 import 'package:provider/provider.dart';
 
@@ -130,6 +135,11 @@ class _MyAppState extends State<MyApp> {
           CourierListScreen.routeName: (ctx) => CourierListScreen(),
           ForgetPassword.routeName: (ctx) => ForgetPassword(),
           TrackingCourierScreen.routeName: (ctx) => TrackingCourierScreen(),
+          AboutUsScreen.routeName: (ctx) => AboutUsScreen(),
+          LatestNewsScreen.routeName: (ctx) => LatestNewsScreen(),
+          SearchScreen.routeName: (ctx) => SearchScreen(),
+          CategorySelected.routeName: (ctx) => CategorySelected(),
+          CategoryCheckoutScreen.routeName: (ctx) => CategoryCheckoutScreen(),
         },
       ),
     );

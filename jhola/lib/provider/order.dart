@@ -40,7 +40,10 @@ class Order with ChangeNotifier {
     String shopContact,
     String username,
     String address,
+    String userLat,
+    String userLong,
     double amount,
+    String deliveryType,
     String phoneNo,
     String userId,
     List<CartItem> product,
@@ -50,6 +53,8 @@ class Order with ChangeNotifier {
     var response = await http.post(url,
         body: json.encode({
           "address": address,
+          "userLat": userLat,
+          "userLong": userLong,
           "date": DateTime.now().toIso8601String(),
           "assignTo": "null",
           "userId": userId,
@@ -63,6 +68,7 @@ class Order with ChangeNotifier {
           "restaurantName": shopName,
           "restaurantContact": shopContact,
           "restaurantAddress": shopAddress,
+          "deliveryType": deliveryType,
           "products": product
               .map((e) => {
                     "productId": e.productId,

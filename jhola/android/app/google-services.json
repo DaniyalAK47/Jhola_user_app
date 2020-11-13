@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:307159515087:android:2561c0ab59865b11441cba",
         "android_client_info": {
-          "package_name": "com.example.jhola"
+          "package_name": "com.jhola.jholaUsers"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "307159515087-49edhgsgpvjnjkl805p3uub5ad9cda7t.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.jhola",
+            "package_name": "com.jhola.jholaUsers",
             "certificate_hash": "d3c54747cc35f40cd1be7197f1d10d0f47651fa9"
           }
         },
@@ -47,7 +47,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:307159515087:android:bc5cdad8c4cb503d441cba",
         "android_client_info": {
-          "package_name": "com.example.jhola_riders"
+          "package_name": "com.jhola.jholaUsers"
         }
       },
       "oauth_client": [

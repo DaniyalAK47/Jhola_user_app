@@ -1,5 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:jhola/screens/about_us_screen.dart';
 import 'package:jhola/screens/courier_list_screen.dart';
 import 'package:jhola/screens/edit_profile_screen.dart';
 import 'package:jhola/screens/order_screen.dart';
@@ -49,6 +50,14 @@ class AppDrawer extends StatelessWidget {
           ),
           Divider(),
           ListTile(
+            leading: Icon(Icons.home),
+            title: Text("Home"),
+            onTap: () => Navigator.of(context).pushReplacementNamed(
+              CategoryScreen.routeName,
+            ),
+          ),
+          Divider(),
+          ListTile(
             leading: Icon(Icons.restaurant),
             title: Text("Restaurant"),
             onTap: () => Navigator.of(context).pushReplacementNamed(
@@ -86,6 +95,14 @@ class AppDrawer extends StatelessWidget {
             title: Text("Edit Profile"),
             onTap: () => Navigator.of(context).pushNamed(
               EditProfileScreen.routeName,
+            ),
+          ),
+          Divider(),
+          ListTile(
+            leading: Icon(Icons.info),
+            title: Text("About Us"),
+            onTap: () => Navigator.of(context).pushNamed(
+              AboutUsScreen.routeName,
             ),
           ),
           Spacer(),

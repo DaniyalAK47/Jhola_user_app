@@ -74,9 +74,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   Future<bool> _saveForm() async {
     final isValid = _form.currentState.validate();
+    print("isValid = $isValid");
     if (!isValid) {
       return false;
     }
+
     _form.currentState.save();
     _seletedLong =
         Provider.of<CurrentLocation>(context, listen: false).logitude;
@@ -122,16 +124,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text(
-              name,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            TextFormField(
+            Padding(
+              padding: EdgeInsets.only(right: 20, left: 10),
+              child: TextFormField(
                 validator: (value) {
                   if (value.isEmpty) {
+                    print("problem in name");
                     return "Please provide your name";
                   }
                   return null;
@@ -139,19 +137,31 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 onSaved: (value) => _name = value,
                 obscureText: isPassword,
                 decoration: InputDecoration(
-                    border: InputBorder.none,
-                    fillColor: Color(0xfff3f3f4),
-                    filled: true)),
-            Text(
-              phoneNo,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(80),
+                      bottomRight: Radius.circular(0),
+                    ),
+                  ),
+                  // border: InputBorder.none,
+                  fillColor: Color(0xfff3f3f4),
+                  filled: true,
+                  hintText: "Username",
+                  hintStyle: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey,
+                  ),
+                  icon: Icon(Icons.person_outline),
+                ),
+              ),
             ),
-            SizedBox(
-              height: 10,
-            ),
-            TextFormField(
+            Padding(
+              padding: EdgeInsets.only(right: 20, left: 10),
+              child: TextFormField(
                 validator: (value) {
                   if (value.isEmpty) {
+                    print("problem in phoneno.");
                     return "Please provide your phone number";
                   }
                   return null;
@@ -160,19 +170,31 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 keyboardType: TextInputType.number,
                 obscureText: isPassword,
                 decoration: InputDecoration(
-                    border: InputBorder.none,
-                    fillColor: Color(0xfff3f3f4),
-                    filled: true)),
-            Text(
-              email,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(0),
+                      bottomRight: Radius.circular(0),
+                    ),
+                  ),
+                  // border: InputBorder.none,
+                  fillColor: Color(0xfff3f3f4),
+                  filled: true,
+                  hintText: "Phone Number",
+                  hintStyle: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey,
+                  ),
+                  icon: Icon(Icons.phone),
+                ),
+              ),
             ),
-            SizedBox(
-              height: 10,
-            ),
-            TextFormField(
+            Padding(
+              padding: EdgeInsets.only(right: 20, left: 10),
+              child: TextFormField(
                 validator: (value) {
                   if (value.isEmpty) {
+                    print("problem in email");
                     return "Please provide your email";
                   }
                   return null;
@@ -181,19 +203,31 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 keyboardType: TextInputType.emailAddress,
                 obscureText: isPassword,
                 decoration: InputDecoration(
-                    border: InputBorder.none,
-                    fillColor: Color(0xfff3f3f4),
-                    filled: true)),
-            Text(
-              password,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(00),
+                      bottomRight: Radius.circular(0),
+                    ),
+                  ),
+                  // border: InputBorder.none,
+                  fillColor: Color(0xfff3f3f4),
+                  filled: true,
+                  hintText: "Email",
+                  hintStyle: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey,
+                  ),
+                  icon: Icon(Icons.email),
+                ),
+              ),
             ),
-            SizedBox(
-              height: 10,
-            ),
-            TextFormField(
+            Padding(
+              padding: EdgeInsets.only(right: 20, left: 10),
+              child: TextFormField(
                 validator: (value) {
                   if (value.isEmpty) {
+                    print("problem in password");
                     return "Please provide your password";
                   }
                   return null;
@@ -201,9 +235,72 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 onSaved: (value) => _password = value,
                 obscureText: true,
                 decoration: InputDecoration(
-                    border: InputBorder.none,
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(0),
+                      bottomRight: Radius.circular(0),
+                    ),
+                  ),
+                  // border: InputBorder.none,
+                  fillColor: Color(0xfff3f3f4),
+                  filled: true,
+                  hintText: "Password",
+                  hintStyle: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey,
+                  ),
+                  icon: Icon(Icons.lock_outline),
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(right: 20, left: 10),
+              child: GestureDetector(
+                onTap: () async {
+                  Position position = await _getCureentLocation();
+                  print(position);
+                  await Navigator.of(context)
+                      .pushNamed(LocationScreen.routeName, arguments: {
+                    'lat': position.latitude.toString(),
+                    'long': position.longitude.toString(),
+                    'screen': "signup",
+                  });
+                },
+                child: TextFormField(
+                  enabled: false,
+
+                  // validator: (value) {
+                  //   if (value.isEmpty) {
+                  //     return "Please provide your address";
+                  //   }
+                  //   return null;
+                  // },
+                  // onSaved: (value) => _password = value,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide.none,
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(0),
+                        bottomRight: Radius.circular(80),
+                      ),
+                    ),
+                    // border: InputBorder.none,
                     fillColor: Color(0xfff3f3f4),
-                    filled: true))
+                    filled: true,
+                    hintText: "Address",
+                    hintStyle: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey,
+                    ),
+                    icon: Icon(
+                      Icons.location_on,
+                    ),
+                  ),
+                ),
+              ),
+            )
           ],
         ),
       ),
@@ -221,6 +318,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return InkWell(
       onTap: () async {
         var result = await _saveForm();
+        print(result);
         if (!result) {
           return;
         }
@@ -230,6 +328,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
         String long = Provider.of<CurrentLocation>(context, listen: false)
             .logitude
             .toString();
+        print(lat);
+        print(long);
 
         Provider.of<Auth>(context, listen: false)
             .registerUser(_email, _name, _password, _phoneNo, lat, long);
@@ -254,25 +354,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
         );
       },
       child: Container(
-        width: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.symmetric(vertical: 15),
-        alignment: Alignment.center,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(5)),
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                  color: Colors.grey.shade200,
-                  offset: Offset(2, 4),
-                  blurRadius: 5,
-                  spreadRadius: 2)
-            ],
+            borderRadius: BorderRadius.all(Radius.circular(100)),
+            // boxShadow: <BoxShadow>[
+            //   BoxShadow(
+            //       color: Colors.grey.shade200,
+            //       offset: Offset(2, 4),
+            //       blurRadius: 5,
+            //       spreadRadius: 2)
+            // ],
             gradient: LinearGradient(
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
                 colors: [Color(0xfffbb448), Color(0xfff7892b)])),
-        child: Text(
-          'Register Now',
-          style: TextStyle(fontSize: 20, color: Colors.white),
+        child: Padding(
+          padding: EdgeInsets.all(10),
+          child: Icon(
+            Icons.done,
+            size: 40,
+            color: Colors.white,
+          ),
         ),
       ),
     );
@@ -318,8 +419,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget _loginAccountLabel() {
     return InkWell(
       onTap: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => LoginScreen()));
+        // Navigator.push(
+        //     context, MaterialPageRoute(builder: (context) => LoginScreen()));
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => LoginScreen()));
       },
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 20),
@@ -384,46 +487,109 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     return Scaffold(
-      body: Container(
-        height: height,
-        child: Stack(
-          children: <Widget>[
-            Positioned(
-              top: -MediaQuery.of(context).size.height * .15,
-              right: -MediaQuery.of(context).size.width * .4,
-              child: BezierContainer(),
-            ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(height: height * .2),
-                    _title(),
-                    SizedBox(
-                      height: 50,
+        body: SingleChildScrollView(
+      child: Stack(
+        children: [
+          Column(
+            children: [
+              Image.asset(
+                'assets/images/register_top.png',
+                width: double.infinity,
+                height: 250,
+                fit: BoxFit.fill,
+              ),
+              Padding(
+                padding: EdgeInsets.only(
+                  right: 10,
+                  top: 40,
+                ),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      bottomRight: Radius.circular(90),
+                      topRight: Radius.circular(90),
                     ),
-                    _emailPasswordWidget(),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _selectLocation(),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _submitButton(),
-                    SizedBox(height: height * .14),
-                    _loginAccountLabel(),
-                  ],
+                  ),
+                  child: Stack(
+                    children: [
+                      _emailPasswordWidget(),
+                      Positioned(right: 5, top: 150, child: _submitButton()),
+                    ],
+                  ),
+                ),
+              ),
+              Image.asset(
+                'assets/images/login_bottom.png',
+                width: double.infinity,
+                height: 250,
+                fit: BoxFit.fill,
+              )
+            ],
+          ),
+          Positioned(
+            right: 0,
+            top: 60,
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => LoginScreen()));
+                },
+                child: Text(
+                  "Login",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.orangeAccent[700],
+                    fontSize: 30,
+                  ),
                 ),
               ),
             ),
-            Positioned(top: 40, left: 0, child: _backButton()),
-          ],
-        ),
+          ),
+        ],
       ),
-    );
+    )
+        // Container(
+        //   height: height,
+        //   child: Stack(
+        //     children: <Widget>[
+        //       Positioned(
+        //         top: -MediaQuery.of(context).size.height * .15,
+        //         right: -MediaQuery.of(context).size.width * .4,
+        //         child: BezierContainer(),
+        //       ),
+        //       Container(
+        //         padding: EdgeInsets.symmetric(horizontal: 20),
+        //         child: SingleChildScrollView(
+        //           child: Column(
+        //             crossAxisAlignment: CrossAxisAlignment.center,
+        //             mainAxisAlignment: MainAxisAlignment.center,
+        //             children: <Widget>[
+        //               SizedBox(height: height * .2),
+        //               _title(),
+        //               SizedBox(
+        //                 height: 50,
+        //               ),
+        //               _emailPasswordWidget(),
+        //               SizedBox(
+        //                 height: 20,
+        //               ),
+        //               _selectLocation(),
+        //               SizedBox(
+        //                 height: 20,
+        //               ),
+        //               _submitButton(),
+        //               SizedBox(height: height * .14),
+        //               _loginAccountLabel(),
+        //             ],
+        //           ),
+        //         ),
+        //       ),
+        //       Positioned(top: 40, left: 0, child: _backButton()),
+        //     ],
+        //   ),
+        // ),
+        );
   }
 }

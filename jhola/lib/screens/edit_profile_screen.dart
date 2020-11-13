@@ -151,6 +151,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Widget _selectLocation() {
     return InkWell(
       onTap: () async {
+        print("button working");
         Position position = await _getCureentLocation();
         print(position);
         await Navigator.of(context)

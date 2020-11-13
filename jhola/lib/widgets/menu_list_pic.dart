@@ -117,7 +117,7 @@ class _MealListPicState extends State<MealListPic> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
-                    Icon(Icons.attach_money),
+                    Text("₹"),
                     SizedBox(
                       width: 6,
                     ),

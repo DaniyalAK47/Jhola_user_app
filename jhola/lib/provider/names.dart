@@ -14,6 +14,7 @@ class NamesItem {
   final String address;
   final String contact;
   final String status;
+  final List<String> category;
 
   NamesItem({
     @required this.id,
@@ -26,6 +27,7 @@ class NamesItem {
     this.address,
     this.contact,
     this.status,
+    this.category,
   });
 }
 
@@ -36,6 +38,7 @@ class MenuItem {
   final String description;
   final String image;
   final String stock;
+  final String category;
 
   MenuItem({
     @required this.id,
@@ -44,6 +47,7 @@ class MenuItem {
     @required this.description,
     this.image,
     this.stock,
+    this.category,
   });
 }
 
@@ -54,6 +58,7 @@ class DealItem {
   final String description;
   final String image;
   final String stock;
+  final String category;
 
   DealItem({
     @required this.id,
@@ -62,6 +67,7 @@ class DealItem {
     @required this.description,
     this.image,
     this.stock,
+    this.category,
   });
 }
 
@@ -92,6 +98,7 @@ class Names with ChangeNotifier {
         double.parse(element.namesLat),
         double.parse(element.namesLong),
       );
+
       //1000 km in distance range will find restaurat
       if (distanceBetween < 10) {
         nearestRestaurant.add(element);
@@ -110,6 +117,7 @@ class Names with ChangeNotifier {
         double.parse(element.namesLong),
       );
       //1000 km in distance range will find restaurat
+      print("$distanceBetween is the distance between 2 places");
       if (distanceBetween < 10) {
         nearestShop.add(element);
       }
@@ -157,6 +165,52 @@ class Names with ChangeNotifier {
     return _shopNames.where((item) => item.id == id).toList();
   }
 
+  List<String> getCategoryOptions(String id) {
+    List<String> categoryOptions;
+    _restaurantNames.forEach((rest) {
+      if (rest.id == id) {
+        print(rest.category);
+        categoryOptions = rest.category;
+      }
+    });
+    _shopNames.forEach((shop) {
+      if (shop.id == id) {
+        categoryOptions = shop.category;
+      }
+    });
+    return categoryOptions;
+  }
+
+  // List<String> getShopCategoryOptions(String id) {
+  //   _shopNames.forEach((shop) {
+  //     if (shop.id == id) {
+  //       return shop.category;
+  //     }
+  //   });
+  //   return null;
+  // }
+
+  List<String> getLocation(String shopId) {
+    String lat;
+    String lng;
+
+    _restaurantNames.forEach((item) {
+      if (item.id == shopId) {
+        lat = item.namesLat;
+        lng = item.namesLong;
+      }
+    });
+
+    _shopNames.forEach((item) {
+      if (item.id == shopId) {
+        lat = item.namesLat;
+        lng = item.namesLong;
+      }
+    });
+
+    return [lat, lng];
+  }
+
   Future<void> fetchAndSetNames() async {
     final urlRestaurant =
         'https://jhola-e90ff.firebaseio.com/registeredShops/restaurants.json';
@@ -189,6 +243,7 @@ class Names with ChangeNotifier {
                           price: double.parse(e["productPrice"].toString()),
                           description: e["productDescription"].toString(),
                           stock: e["stock"].toString(),
+                          category: e["category_name"].toString(),
                           image:
                               "https://firebasestorage.googleapis.com/v0/b/jhola-e90ff.appspot.com/o/images%2F${e['productId'].toString()}?alt=media&token=37e96ab0-172d-4387-88a5-18c508abe70b",
                         ))
@@ -203,9 +258,18 @@ class Names with ChangeNotifier {
                           price: double.parse(e["productPrice"].toString()),
                           description: e["productDescription"].toString(),
                           stock: e["stock"].toString(),
+                          category: e["category_name"].toString(),
                           image:
                               "https://firebasestorage.googleapis.com/v0/b/jhola-e90ff.appspot.com/o/images%2F${e['productId'].toString()}?alt=media&token=37e96ab0-172d-4387-88a5-18c508abe70b",
                         ))
+                    .toList(),
+            category: resData["categories"] == null
+                ? []
+                : (resData["categories"] as Map<String, dynamic>)
+                    .values
+                    .map(
+                      (e) => e["category_name"].toString(),
+                    )
                     .toList(),
           ),
         );

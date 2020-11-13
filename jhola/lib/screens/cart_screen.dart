@@ -1,10 +1,13 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart';
 import 'package:jhola/provider/admin.dart';
 import 'package:jhola/provider/auth.dart';
 import 'package:jhola/provider/names.dart';
+import 'package:jhola/screens/category_checkout_screen.dart';
+import 'package:jhola/widgets/cart_list_item.dart';
 import 'package:provider/provider.dart';
 
 import './../provider/cart.dart' show Cart;
@@ -26,9 +29,10 @@ class _CartScreenState extends State<CartScreen> {
   static GlobalKey<FormState> _form = GlobalKey<FormState>();
   bool _orderLoading = false;
   bool _initDataLoad = true;
+  bool _delivery = true;
 
-  var deliveryCharges;
-  var tax;
+  // var deliveryCharges;
+  // var tax;
 
   @override
   void didChangeDependencies() async {
@@ -37,10 +41,10 @@ class _CartScreenState extends State<CartScreen> {
         _orderLoading = true;
       });
       await Provider.of<Admin>(context, listen: false).fetchAdmin();
-      deliveryCharges =
-          Provider.of<Admin>(context, listen: false).deliveryCharge;
+      // deliveryCharges =
+      //     Provider.of<Admin>(context, listen: false).deliveryCharge;
 
-      tax = Provider.of<Admin>(context, listen: false).tax;
+      // tax = Provider.of<Admin>(context, listen: false).tax;
 
       setState(() {
         _orderLoading = false;
@@ -64,6 +68,8 @@ class _CartScreenState extends State<CartScreen> {
     double height = MediaQuery.of(context).size.height;
 
     final cart = Provider.of<Cart>(context, listen: false);
+    // final cartItems = cart.items;
+
     // static final _descriptionFocusNode = FocusNode();
     // static final _form = GlobalKey<FormState>();
     // static GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
@@ -108,14 +114,14 @@ class _CartScreenState extends State<CartScreen> {
       }
     }
 
-    bool _saveForm() {
-      final isValid = _form.currentState.validate();
-      if (!isValid) {
-        return false;
-      }
-      _form.currentState.save();
-      return true;
-    }
+    // bool _saveForm() {
+    //   final isValid = _form.currentState.validate();
+    //   if (!isValid) {
+    //     return false;
+    //   }
+    //   _form.currentState.save();
+    //   return true;
+    // }
 
     Widget _backButton() {
       return InkWell(
@@ -128,10 +134,17 @@ class _CartScreenState extends State<CartScreen> {
             children: <Widget>[
               Container(
                 padding: EdgeInsets.only(left: 0, top: 10, bottom: 10),
-                child: Icon(Icons.keyboard_arrow_left, color: Colors.black),
+                child: Icon(
+                  Icons.keyboard_arrow_left,
+                  color: Colors.white,
+                  size: 30,
+                ),
               ),
               Text('Back',
-                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500))
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white))
             ],
           ),
         ),
@@ -145,519 +158,190 @@ class _CartScreenState extends State<CartScreen> {
     // var total = (cart.totalAmount + double.parse(deliveryCharges)) *
     //     ((100 + double.parse(tax)) / 100);
 
+    // List<String> items = ['shampoo', 'water', "sanitizer", "chips"];
+
     return Scaffold(
       body: _orderLoading
           ? Center(
               child: CircularProgressIndicator(),
             )
           : SingleChildScrollView(
-              child: Column(
+              child: Stack(
                 children: [
-                  Container(
-                    height: 150,
-                    child: Stack(
-                      children: [
-                        Positioned(top: 40, left: 0, child: _backButton()),
-                        Positioned(
-                          top: -MediaQuery.of(context).size.height * .15,
-                          right: -MediaQuery.of(context).size.width * .4,
-                          child: BezierContainer(),
-                        ),
-                      ],
-                    ),
-                  ),
                   Column(
-                    children: <Widget>[
-                      Card(
-                        margin: EdgeInsets.all(15),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
+                    children: [
+                      Image.asset(
+                        'assets/images/cart_screen_short.png',
+                        width: double.infinity,
+                        height: 300,
+                        fit: BoxFit.fill,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 0, left: 12, right: 10),
+                        child: Container(
+                          padding: EdgeInsets.only(top: 10),
+                          decoration: BoxDecoration(
+                            border: Border.symmetric(
+                              horizontal: BorderSide(
+                                width: 3,
+                                color: Colors.grey[400],
+                              ),
+                              vertical: BorderSide.none,
+                            ),
+                          ),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: <Widget>[
-                              Expanded(
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "Total",
-                                          style: TextStyle(
-                                            fontSize: 10,
-                                          ),
-                                        ),
-                                        Spacer(),
-                                        Chip(
-                                          label: Text(
-                                            '${cart.totalAmount.toStringAsFixed(2)}',
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              // fontSize: 10,
-                                            ),
-                                          ),
-                                          backgroundColor: Colors.white,
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "Delivery Charges",
-                                          style: TextStyle(
-                                            fontSize: 10,
-                                          ),
-                                        ),
-                                        Spacer(),
-                                        Chip(
-                                          label: Text(
-                                            deliveryCharges.toString(),
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              // fontSize: 10,
-                                            ),
-                                          ),
-                                          backgroundColor: Colors.white,
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "Tax",
-                                          style: TextStyle(
-                                            fontSize: 10,
-                                          ),
-                                        ),
-                                        Spacer(),
-                                        Chip(
-                                          label: Text(
-                                            tax.toString(),
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              // fontSize: 10,
-                                            ),
-                                          ),
-                                          backgroundColor: Colors.white,
-                                        ),
-                                      ],
-                                    ),
-                                    Divider(),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "Grand Total",
-                                          style: TextStyle(
-                                            fontSize: 10,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        Spacer(),
-                                        Chip(
-                                          label: Text(
-                                            ((cart.totalAmount +
-                                                        double.parse(
-                                                            deliveryCharges)) *
-                                                    ((100 + double.parse(tax)) /
-                                                        100))
-                                                .toStringAsFixed(2),
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              // fontSize: 10,
-                                            ),
-                                          ),
-                                          backgroundColor: Colors.white,
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.only(left: 35),
+                                child: Text(
+                                  "ITEM NAME",
+                                  style: TextStyle(
+                                    color: Colors.grey[500],
+                                  ),
                                 ),
                               ),
-                              FlatButton(
-                                child: _isLoading
-                                    ? CircularProgressIndicator()
-                                    : Text("ORDER NOW"),
-                                onPressed: cart.totalAmount <= 0
-                                    ? null
-                                    : () async {
-                                        bool saving = _saveForm();
-
-                                        if (!saving) {
-                                          return;
-                                        }
-
-                                        var _userId = userData.guserId;
-                                        var _phoneNo = userData.phoneNo;
-                                        var _shopId = cart.items.values
-                                            .toList()[0]
-                                            .shopId;
-
-                                        print(_shopId);
-                                        Map<String, String> shopInfo =
-                                            Provider.of<Names>(context,
-                                                    listen: false)
-                                                .getShopInfo(_shopId);
-                                        var shopName = shopInfo["name"];
-                                        var shopAddress = shopInfo["address"];
-                                        var shopContact = shopInfo["contact"];
-
-                                        String orderId =
-                                            await Provider.of<Order>(context,
-                                                    listen: false)
-                                                .addOrder(
-                                          cart.items.values.toList()[0].shopId,
-                                          shopName,
-                                          shopAddress,
-                                          shopContact,
-                                          _name,
-                                          _address,
-                                          (cart.totalAmount +
-                                                  double.parse(
-                                                      deliveryCharges)) *
-                                              ((100 + double.parse(tax)) / 100),
-                                          _phoneNo,
-                                          _userId,
-                                          cart.items.values.toList(),
-                                        );
-                                        sendFcmMessage(
-                                            _shopId, orderId, _userId);
-
-                                        cart.clear();
-                                        showDialog(
-                                          context: context,
-                                          builder: (ctx) => AlertDialog(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(18)),
-                                            content: Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                Padding(
-                                                  padding: EdgeInsets.fromLTRB(
-                                                      10, 20, 10, 10),
-                                                  child: Image.asset(
-                                                    'assets/images/success_order.png',
-                                                    width: 200,
-                                                    height: 200,
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding: EdgeInsets.all(10),
-                                                  child: Text(
-                                                    "Your order was successful.",
-                                                    style: TextStyle(
-                                                      fontSize: 20,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding: EdgeInsets.all(10),
-                                                  child: SizedBox(
-                                                    width: double.infinity,
-                                                    child: Text(
-                                                      "You can track the delivery in the 'Orders' section.",
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  children: [
-                                                    ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.all(
-                                                              Radius.circular(
-                                                                  5)),
-                                                      child: FlatButton(
-                                                        shape:
-                                                            RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(18),
-                                                        ),
-                                                        color:
-                                                            Colors.deepOrange,
-                                                        onPressed: () {
-                                                          Navigator.of(context)
-                                                              .pop();
-                                                          Navigator.of(context)
-                                                              .pop();
-                                                        },
-                                                        child: Text(
-                                                          "Continue Shopping",
-                                                          style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 20,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                textColor: Colors.purple,
+                              Text(
+                                "QUANTITY",
+                                style: TextStyle(
+                                  color: Colors.grey[400],
+                                ),
+                              ),
+                              Text(
+                                "PRICE",
+                                style: TextStyle(
+                                  color: Colors.grey[400],
+                                ),
                               ),
                             ],
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 12, right: 10),
+                        child: Container(
+                          // padding: EdgeInsets.only(left: 10, right: 10),
+                          // height: 250,
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                width: 3,
+                                color: Colors.grey[400],
+                              ),
+                              borderRadius: BorderRadius.only(
+                                  bottomRight: Radius.circular(20),
+                                  bottomLeft: Radius.circular(20))),
+                          child: ListView.builder(
+                            physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemBuilder: (ctx, index) => CartListItem(
+                                // cart,
+                                cart.items.values.toList()[index].cartId,
+                                cart.items.values.toList()[index].shopId,
+                                cart.items.keys.toList()[index],
+                                cart.items.values.toList()[index].title,
+                                cart.items.values.toList()[index].price,
+                                cart.items.values.toList()[index].quantity),
+                            itemCount: cart.itemLength,
                           ),
                         ),
                       ),
                       SizedBox(
-                        height: 10,
+                        height: 20,
                       ),
-                      Container(
-                        height: 250,
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          itemBuilder: (ctx, index) => CartList(
-                              cart.items.values.toList()[index].cartId,
-                              cart.items.values.toList()[index].shopId,
-                              cart.items.keys.toList()[index],
-                              cart.items.values.toList()[index].title,
-                              cart.items.values.toList()[index].price,
-                              cart.items.values.toList()[index].quantity),
-                          itemCount: cart.itemLength,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          RaisedButton(
+                            color: _delivery ? Colors.blue : Colors.grey,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30)),
+                            onPressed: () {
+                              setState(() {
+                                _delivery = true;
+                              });
+                            },
+                            child: Text(
+                              "HOME \nDELIVERY",
+                              style: TextStyle(
+                                fontSize: 25,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          RaisedButton(
+                            color: _delivery
+                                ? Colors.grey[400]
+                                : Colors.blueAccent,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30)),
+                            onPressed: () {
+                              setState(() {
+                                _delivery = false;
+                              });
+                            },
+                            child: Text(
+                              "STORE \nPICKUP",
+                              style: TextStyle(
+                                fontSize: 25,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      RaisedButton(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Form(
-                          key: _form,
-                          child: Column(
+                        color: Colors.lightGreen,
+                        onPressed: Provider.of<Cart>(context).totalAmount <= 0
+                            ? null
+                            : () {
+                                Navigator.of(context)
+                                    .push(MaterialPageRoute(builder: (ctx) {
+                                  return CategoryCheckoutScreen(
+                                    delivery: _delivery,
+                                  );
+                                }));
+                              },
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            top: 10,
+                            bottom: 10,
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
                             children: [
-                              TextFormField(
-                                autofocus: false,
-                                decoration: InputDecoration(
-                                  labelText: "Name",
+                              Text(
+                                "CHECKOUT",
+                                style: TextStyle(
+                                  fontSize: 40,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
                                 ),
-                                textInputAction: TextInputAction.next,
-                                onFieldSubmitted: (_) {
-                                  FocusScope.of(context)
-                                      .requestFocus(_descriptionFocusNode);
-                                },
-                                onSaved: (value) => _name = value,
-                                validator: (value) {
-                                  if (value.isEmpty) {
-                                    return "Please provide your name";
-                                  }
-                                  return null;
-                                },
-                              ),
-                              TextFormField(
-                                autofocus: false,
-                                decoration: InputDecoration(
-                                  labelText: "Delivery Address",
-                                ),
-                                maxLines: 3,
-                                keyboardType: TextInputType.multiline,
-                                focusNode: _descriptionFocusNode,
-                                validator: (value) {
-                                  if (value.isEmpty) {
-                                    return "Please provide a delivery address!";
-                                  }
-                                  return null;
-                                },
-                                onSaved: (value) => _address = value,
                               ),
                               Padding(
-                                padding: EdgeInsets.all(10),
-                                child: SizedBox(
-                                    child: Text(
-                                  "Payment Method",
-                                  textAlign: TextAlign.left,
-                                )),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.all(10),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      children: <Widget>[
-                                        Radio(
-                                          value: 1,
-                                          groupValue: group,
-                                          onChanged: (T) {
-                                            print(T);
-                                            setState(() {
-                                              group = T;
-                                            });
-                                          },
-                                        ),
-                                        Text("Cash on delivery"),
-                                      ],
-                                    ),
-                                    // Row(
-                                    //   children: <Widget>[
-                                    //     Radio(
-                                    //       value: 2,
-                                    //       groupValue: group,
-                                    //       onChanged: (T) {
-                                    //         print(T);
-                                    //         setState(() {
-                                    //           group = T;
-                                    //         });
-                                    //       },
-                                    //     ),
-                                    //     Text("Online Payment:"),
-                                    //   ],
-                                    // ),
-                                  ],
+                                padding: EdgeInsets.only(
+                                  left: 10,
                                 ),
-                              )
+                                child: Icon(
+                                  Icons.arrow_forward_ios,
+                                  color: Colors.white,
+                                  size: 40,
+                                ),
+                              ),
                             ],
                           ),
                         ),
-                      ),
-                      // Stepper(
-                      //   currentStep: currentStep,
-                      //   onStepContinue: () {
-                      //     if (currentStep != 1) {
-                      //       go(1);
-                      //     }
-                      //   },
-                      //   onStepCancel: () {
-                      //     if (currentStep != 0) {
-                      //       go(-1);
-                      //     }
-                      //   },
-                      //   controlsBuilder: (BuildContext ctx,
-                      //       {VoidCallback onStepContinue,
-                      //       VoidCallback onStepCancel}) {
-                      //     return Row(
-                      //       children: [
-                      //         FlatButton(
-                      //           onPressed: onStepContinue,
-                      //           child: Text('Next'),
-                      //         ),
-                      //         FlatButton(
-                      //           onPressed: onStepCancel,
-                      //           child: Text("Cancel"),
-                      //         ),
-                      //       ],
-                      //     );
-                      //   },
-                      //   steps: [
-                      //     Step(
-                      //       isActive: currentStep == 0 ? true : false,
-                      //       title: Text("Confirm Order"),
-                      //       content: Container(
-                      //         height: 250,
-                      //         child: ListView.builder(
-                      //           shrinkWrap: true,
-                      //           itemBuilder: (ctx, index) => CartList(
-                      //               cart.items.values.toList()[index].cartId,
-                      //               cart.items.values.toList()[index].shopId,
-                      //               cart.items.keys.toList()[index],
-                      //               cart.items.values.toList()[index].title,
-                      //               cart.items.values.toList()[index].price,
-                      //               cart.items.values.toList()[index].quantity),
-                      //           itemCount: cart.itemLength,
-                      //         ),
-                      //       ),
-                      //     ),
-                      //     Step(
-                      //       isActive: currentStep == 1 ? true : false,
-                      //       title: Text('Delivery Details'),
-                      //       content: Padding(
-                      //         padding: EdgeInsets.all(16),
-                      //         child: Form(
-                      //           key: _form,
-                      //           child: Column(
-                      //             children: [
-                      //               TextFormField(
-                      //                 autofocus: false,
-                      //                 decoration: InputDecoration(
-                      //                   labelText: "Name",
-                      //                 ),
-                      //                 textInputAction: TextInputAction.next,
-                      //                 onFieldSubmitted: (_) {
-                      //                   FocusScope.of(context).requestFocus(
-                      //                       _descriptionFocusNode);
-                      //                 },
-                      //                 onSaved: (value) => _name = value,
-                      //                 validator: (value) {
-                      //                   if (value.isEmpty) {
-                      //                     return "Please provide your name";
-                      //                   }
-                      //                   return null;
-                      //                 },
-                      //               ),
-                      //               TextFormField(
-                      //                 autofocus: false,
-                      //                 decoration: InputDecoration(
-                      //                   labelText: "Delivery Address",
-                      //                 ),
-                      //                 maxLines: 3,
-                      //                 keyboardType: TextInputType.multiline,
-                      //                 focusNode: _descriptionFocusNode,
-                      //                 validator: (value) {
-                      //                   if (value.isEmpty) {
-                      //                     return "Please provide a delivery address!";
-                      //                   }
-                      //                   return null;
-                      //                 },
-                      //                 onSaved: (value) => _address = value,
-                      //               ),
-                      //               Padding(
-                      //                 padding: EdgeInsets.all(10),
-                      //                 child: SizedBox(
-                      //                     child: Text(
-                      //                   "Payment Method",
-                      //                   textAlign: TextAlign.left,
-                      //                 )),
-                      //               ),
-                      //               Padding(
-                      //                 padding: EdgeInsets.all(10),
-                      //                 child: Column(
-                      //                   children: [
-                      //                     Row(
-                      //                       children: <Widget>[
-                      //                         Radio(
-                      //                           value: 1,
-                      //                           groupValue: group,
-                      //                           onChanged: (T) {
-                      //                             print(T);
-                      //                             setState(() {
-                      //                               group = T;
-                      //                             });
-                      //                           },
-                      //                         ),
-                      //                         Text("Cash on delivery"),
-                      //                       ],
-                      //                     ),
-                      //                     Row(
-                      //                       children: <Widget>[
-                      //                         Radio(
-                      //                           value: 2,
-                      //                           groupValue: group,
-                      //                           onChanged: (T) {
-                      //                             print(T);
-                      //                             setState(() {
-                      //                               group = T;
-                      //                             });
-                      //                           },
-                      //                         ),
-                      //                         Text("Online Payment:"),
-                      //                       ],
-                      //                     ),
-                      //                   ],
-                      //                 ),
-                      //               )
-                      //             ],
-                      //           ),
-                      //         ),
-                      //       ),
-                      //     ),
-                      //   ],
-                      // ),
+                      )
                     ],
                   ),
+                  Positioned(top: 25, left: 10, child: _backButton()),
                 ],
               ),
             ),
