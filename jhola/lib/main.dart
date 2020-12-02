@@ -8,6 +8,7 @@ import 'package:jhola/provider/courier.dart';
 import 'package:jhola/provider/courier_location.dart';
 import 'package:jhola/provider/names.dart';
 import 'package:jhola/provider/rider.dart';
+import 'package:jhola/screens/XDiPhoneXXS11Pro1.dart';
 import 'package:jhola/screens/about_us_screen.dart';
 import 'package:jhola/screens/category_checkout_screen.dart';
 import 'package:jhola/screens/courier_list_screen.dart';
@@ -140,6 +141,7 @@ class _MyAppState extends State<MyApp> {
           SearchScreen.routeName: (ctx) => SearchScreen(),
           CategorySelected.routeName: (ctx) => CategorySelected(),
           CategoryCheckoutScreen.routeName: (ctx) => CategoryCheckoutScreen(),
+          XDiPhoneXXS11Pro1.routeName: (ctx) => XDiPhoneXXS11Pro1()
         },
       ),
     );

@@ -38,6 +38,7 @@ dependencies:
   change_app_package_name: ^0.1.2
   flappy_search_bar: ^1.7.2
   image_picker: ^0.6.7+11
+  adobe_xd: ^1.0.0+1
 
 flutter_icons:
   image_path: "assets/images/company_logo.png"
@@ -87,6 +88,13 @@ flutter:
     - assets/images/referAFriendCategory.png
     - assets/images/courierCategory.jpg
     - assets/images/logoFinal.png
+    - assets/images/courierHome.png
+    - assets/images/footerHome.jpg
+    - assets/images/localStoresHome.png
+    - assets/images/foodRestaurantHome.png
+    - assets/images/referEarnHome.jpg
+    - assets/images/welcome_image_home.png
+    
     
 
   # An image asset can refer to one or more resolution-specific "variants", see

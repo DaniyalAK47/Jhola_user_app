@@ -1,5 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:jhola/screens/XDiPhoneXXS11Pro1.dart';
 import 'package:jhola/screens/about_us_screen.dart';
 import 'package:jhola/screens/courier_list_screen.dart';
 import 'package:jhola/screens/edit_profile_screen.dart';
@@ -53,7 +54,7 @@ class AppDrawer extends StatelessWidget {
             leading: Icon(Icons.home),
             title: Text("Home"),
             onTap: () => Navigator.of(context).pushReplacementNamed(
-              CategoryScreen.routeName,
+              XDiPhoneXXS11Pro1.routeName,
             ),
           ),
           Divider(),

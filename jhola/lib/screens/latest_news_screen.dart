@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:jhola/screens/XDiPhoneXXS11Pro1.dart';
 import 'package:jhola/screens/category_screen.dart';
 import 'package:jhola/screens/welcome_screen.dart';
 import 'package:jhola/widgets/bezierContainer.dart';
@@ -57,7 +58,8 @@ class _LatestNewsScreenState extends State<LatestNewsScreen> {
       if (autoLogin == 'true') {
         // Navigator.of(context).pushReplacementNamed(LatestNewsScreen.routeName,
         // arguments: {"autoLogin:true"});
-        Navigator.of(context).pushReplacementNamed(CategoryScreen.routeName);
+        // Navigator.of(context).pushReplacementNamed(CategoryScreen.routeName);
+        Navigator.of(context).pushReplacementNamed(XDiPhoneXXS11Pro1.routeName);
       } else {
         // Navigator.of(context).pushReplacementNamed(LatestNewsScreen.routeName,
         // arguments: {"autoLogin:false"});
