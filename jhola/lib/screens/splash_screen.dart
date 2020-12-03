@@ -49,23 +49,10 @@ class _SplashScreenState extends State<SplashScreen> {
     });
     return Scaffold(
       backgroundColor: Color(0xfffbb448),
-      body: Center(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Spacer(),
-            Image.asset(
-              'assets/images/logoFinal.png',
-              width: MediaQuery.of(context).size.width * 0.6,
-              height: MediaQuery.of(context).size.width * 0.6,
-            ),
-            Text(
-              "Made in India.",
-              style: TextStyle(fontSize: 20, fontStyle: FontStyle.italic),
-            ),
-            Spacer(),
-          ],
-        ),
+      body: Image(
+        image: AssetImage('assets/images/splash_screen.png'),
+        width: double.infinity,
+        height: double.infinity,
       ),
     );
   }
